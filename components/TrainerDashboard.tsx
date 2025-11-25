@@ -1,5 +1,5 @@
-import React from 'react';
-import { Users, FileText, TrendingUp, AlertCircle, Plus, Search, MoreVertical, CheckCircle, Clock } from 'lucide-react';
+import React, { useState } from 'react';
+import { Users, FileText, TrendingUp, AlertCircle, Plus, Search, MoreVertical, CheckCircle, Clock, X, Calendar } from 'lucide-react';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line,
   Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis
@@ -13,7 +13,7 @@ const STUDENTS_DATA = [
   { id: 5, name: 'فيصل الراشد', progress: 60, status: 'Inactive', lastActive: '1 week ago', avatar: 'FR' },
 ];
 
-const ASSIGNMENTS_DATA = [
+const INITIAL_ASSIGNMENTS = [
   { id: 1, title: 'تحدي المتاهة الذكية', due: '2025-06-15', completed: 18, total: 25, status: 'Active' },
   { id: 2, title: 'برمجة الحساسات - المستوي 1', due: '2025-06-10', completed: 25, total: 25, status: 'Closed' },
   { id: 3, title: 'مشروع الذراع الآلي', due: '2025-06-20', completed: 5, total: 25, status: 'Upcoming' },
@@ -38,8 +38,29 @@ const SKILLS_DATA = [
 ];
 
 const TrainerDashboard: React.FC = () => {
+  const [assignments, setAssignments] = useState(INITIAL_ASSIGNMENTS);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newTask, setNewTask] = useState({ title: '', due: '' });
+
+  const handleAddTask = () => {
+    if (!newTask.title || !newTask.due) return;
+    
+    const newAssignment = {
+      id: Date.now(),
+      title: newTask.title,
+      due: newTask.due,
+      completed: 0,
+      total: 25, // Assuming generic class size
+      status: 'Active'
+    };
+    
+    setAssignments([newAssignment, ...assignments]);
+    setNewTask({ title: '', due: '' });
+    setIsModalOpen(false);
+  };
+
   return (
-    <div className="p-6 lg:p-10 space-y-8 animate-fadeIn text-slate-100">
+    <div className="p-6 lg:p-10 space-y-8 animate-fadeIn text-slate-100 relative">
       
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -47,7 +68,10 @@ const TrainerDashboard: React.FC = () => {
           <h2 className="text-3xl font-bold text-white mb-1">لوحة المدرب</h2>
           <p className="text-slate-400">إدارة الفصول، متابعة الطلاب، وتقييم الأداء.</p>
         </div>
-        <button className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg font-bold shadow-lg shadow-emerald-600/20 transition-all">
+        <button 
+          onClick={() => setIsModalOpen(true)}
+          className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg font-bold shadow-lg shadow-emerald-600/20 transition-all"
+        >
           <Plus size={18} />
           <span>مهمة جديدة</span>
         </button>
@@ -57,7 +81,7 @@ const TrainerDashboard: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { icon: Users, label: 'إجمالي الطلاب', value: '125', sub: '+12 هذا الأسبوع', color: 'bg-blue-500/10 text-blue-500' },
-          { icon: FileText, label: 'الواجبات النشطة', value: '4', sub: '2 تنتهي قريباً', color: 'bg-emerald-500/10 text-emerald-500' },
+          { icon: FileText, label: 'الواجبات النشطة', value: assignments.filter(a => a.status === 'Active').length.toString(), sub: 'مهام جارية', color: 'bg-emerald-500/10 text-emerald-500' },
           { icon: TrendingUp, label: 'متوسط الأداء', value: '82%', sub: '+5% عن الشهر الماضي', color: 'bg-amber-500/10 text-amber-500' },
           { icon: AlertCircle, label: 'بحاجة لمساعدة', value: '3', sub: 'طلاب متعثرين', color: 'bg-rose-500/10 text-rose-500' },
         ].map((stat, idx) => (
@@ -184,12 +208,15 @@ const TrainerDashboard: React.FC = () => {
 
            {/* Assignments List */}
            <div className="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 flex-1">
-              <h3 className="text-lg font-bold text-white mb-4">الواجبات والتحديات</h3>
-              <div className="space-y-3">
-                 {ASSIGNMENTS_DATA.map((assign) => (
-                    <div key={assign.id} className="bg-slate-900/50 border border-slate-700/50 rounded-xl p-3 hover:border-emerald-500/30 transition-colors">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-bold text-white">الواجبات والتحديات</h3>
+                <span className="text-xs bg-slate-700 text-slate-300 px-2 py-1 rounded-full">{assignments.length}</span>
+              </div>
+              <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1 custom-scrollbar">
+                 {assignments.map((assign) => (
+                    <div key={assign.id} className="bg-slate-900/50 border border-slate-700/50 rounded-xl p-3 hover:border-emerald-500/30 transition-colors group animate-slideDown">
                        <div className="flex justify-between items-start mb-2">
-                          <h4 className="font-medium text-slate-200 text-sm">{assign.title}</h4>
+                          <h4 className="font-medium text-slate-200 text-sm group-hover:text-emerald-400 transition-colors">{assign.title}</h4>
                           <span className={`text-[10px] px-1.5 py-0.5 rounded ${assign.status === 'Active' ? 'bg-emerald-500/10 text-emerald-400' : assign.status === 'Closed' ? 'bg-slate-700 text-slate-400' : 'bg-amber-500/10 text-amber-400'}`}>
                              {assign.status}
                           </span>
@@ -212,6 +239,74 @@ const TrainerDashboard: React.FC = () => {
         </div>
 
       </div>
+
+      {/* New Task Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
+            <div className="bg-slate-900 border border-slate-700 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden animate-scaleIn">
+                <div className="p-6 border-b border-slate-800 flex justify-between items-center">
+                    <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                        <Plus className="text-emerald-500" />
+                        إضافة مهمة جديدة
+                    </h3>
+                    <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white transition-colors">
+                        <X size={20} />
+                    </button>
+                </div>
+                
+                <div className="p-6 space-y-5">
+                    <div>
+                        <label className="block text-sm font-medium text-slate-400 mb-2">عنوان المهمة / التحدي</label>
+                        <input 
+                            type="text" 
+                            value={newTask.title}
+                            onChange={(e) => setNewTask({...newTask, title: e.target.value})}
+                            className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all placeholder:text-slate-600"
+                            placeholder="مثال: تحدي برمجة تتبع الخط..."
+                            autoFocus
+                        />
+                    </div>
+                    
+                    <div>
+                        <label className="block text-sm font-medium text-slate-400 mb-2">تاريخ التسليم</label>
+                        <div className="relative">
+                            <input 
+                                type="date" 
+                                value={newTask.due}
+                                onChange={(e) => setNewTask({...newTask, due: e.target.value})}
+                                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all pl-10"
+                            />
+                            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+                        </div>
+                    </div>
+
+                    <div className="bg-slate-800/50 rounded-xl p-4 text-xs text-slate-400 border border-slate-700/50 flex gap-3">
+                         <div className="shrink-0 w-8 h-8 bg-slate-800 rounded-lg flex items-center justify-center text-blue-500">
+                             <CheckCircle size={16} />
+                         </div>
+                         <p className="leading-relaxed">سيتم إشعار جميع الطلاب في الفصل بهذه المهمة فوراً. يمكنك تعديل التفاصيل لاحقاً من قائمة المهام.</p>
+                    </div>
+                </div>
+
+                <div className="p-6 bg-slate-950/50 border-t border-slate-800 flex gap-3">
+                    <button 
+                        onClick={() => setIsModalOpen(false)} 
+                        className="px-6 py-3 border border-slate-700 hover:bg-slate-800 text-slate-300 rounded-xl font-bold transition-colors"
+                    >
+                        إلغاء
+                    </button>
+                    <button 
+                        onClick={handleAddTask}
+                        disabled={!newTask.title || !newTask.due}
+                        className="flex-1 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-white py-3 rounded-xl font-bold transition-all shadow-lg shadow-emerald-600/20"
+                    >
+                        نشر المهمة
+                    </button>
+                </div>
+            </div>
+        </div>
+      )}
+
     </div>
   );
 };

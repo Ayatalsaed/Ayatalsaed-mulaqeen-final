@@ -43,11 +43,16 @@ export interface RobotConfig {
     infrared?: { sensitivity: number };
     color?: { illumination: boolean };
     gyro?: { axis: '3-axis' | '6-axis' };
-    camera?: { resolution: '720p' | '1080p' };
+    camera?: { resolution: '720p' | '1080p'; illumination?: boolean };
     lidar?: { range: number; sampleRate: number };
     imu?: { accelRange: '2g' | '4g' | '8g'; gyroRange: '250dps' | '500dps' };
   };
   color: string;
+  branding?: {
+    primaryColor: string;
+    secondaryColor: string;
+    logo?: string;
+  };
 }
 
 export interface Challenge {

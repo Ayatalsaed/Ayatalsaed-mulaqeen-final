@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
-import Sidebar from './components/Sidebar';
-import Dashboard from './components/Dashboard';
-import CodeEditor from './components/CodeEditor';
-import SimulationViewport from './components/SimulationViewport';
-import Simulation3D from './components/Simulation3D';
-import BotChat from './components/BotChat';
-import RobotBuilder from './components/RobotBuilder';
+import React, { useState, Suspense, lazy } from 'react';
 import LandingPage from './components/LandingPage';
-import TrainerDashboard from './components/TrainerDashboard';
 import { View, Challenge, RobotConfig } from './types';
-import { Bot, Cpu, Sliders, Box, Layers } from 'lucide-react';
+import { Bot, Cpu, Sliders, Box, Layers, Loader2 } from 'lucide-react';
+
+// Lazy Load Components
+const Sidebar = lazy(() => import('./components/Sidebar'));
+const Dashboard = lazy(() => import('./components/Dashboard'));
+const CodeEditor = lazy(() => import('./components/CodeEditor'));
+const SimulationViewport = lazy(() => import('./components/SimulationViewport'));
+const Simulation3D = lazy(() => import('./components/Simulation3D'));
+const BotChat = lazy(() => import('./components/BotChat'));
+const RobotBuilder = lazy(() => import('./components/RobotBuilder'));
+const TrainerDashboard = lazy(() => import('./components/TrainerDashboard'));
 
 const INITIAL_CODE = `# برمجة حركة الروبوت
 # المهمة: تحرك للأمام ثم انعطف لليمين
@@ -28,6 +30,13 @@ const INITIAL_CHALLENGES: Challenge[] = [
   { id: 3, title: 'اتباع الخط الأسود', description: 'استخدم حساسات الأشعة تحت الحمراء.', difficulty: 'Hard', completed: false },
 ];
 
+const LoadingScreen = () => (
+  <div className="flex h-full w-full flex-col items-center justify-center bg-slate-950 text-slate-300">
+    <Loader2 className="h-10 w-10 animate-spin text-emerald-500 mb-4" />
+    <p className="text-sm font-mono animate-pulse">جاري تحميل المعمل...</p>
+  </div>
+);
+
 export default function App() {
   const [currentView, setCurrentView] = useState<View>(View.LANDING);
   const [code, setCode] = useState(INITIAL_CODE);
@@ -45,11 +54,15 @@ export default function App() {
       infrared: { sensitivity: 50 },
       color: { illumination: true },
       gyro: { axis: '3-axis' },
-      camera: { resolution: '720p' },
+      camera: { resolution: '720p', illumination: false },
       lidar: { range: 8, sampleRate: 4000 },
       imu: { accelRange: '4g', gyroRange: '500dps' }
     },
-    color: '#10b981'
+    color: '#10b981',
+    branding: {
+      primaryColor: '#10b981',
+      secondaryColor: '#334155'
+    }
   });
 
   const handleRunCode = () => {
@@ -106,7 +119,7 @@ export default function App() {
     }, 800);
   };
 
-  // If on Landing Page, render only LandingPage component
+  // If on Landing Page, render only LandingPage component (Eager Load)
   if (currentView === View.LANDING) {
     return <LandingPage onStart={() => setCurrentView(View.DASHBOARD)} />;
   }
@@ -234,8 +247,25 @@ export default function App() {
              config={robotConfig} 
              setConfig={setRobotConfig} 
              onSave={() => {
-               alert('تم حفظ تكوين الروبوت بنجاح!');
-               setCurrentView(View.EDITOR);
+                // Create a JSON blob from the configuration
+                const jsonString = JSON.stringify(robotConfig, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                // Create a temporary link element to trigger download
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `${robotConfig.name.replace(/\s+/g, '_')}_config.json`;
+                document.body.appendChild(link);
+                link.click();
+                
+                // Cleanup
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                // Show confirmation and navigate
+                alert(`تم تحميل ملف التكوين: ${link.download}`);
+                setCurrentView(View.EDITOR);
              }} 
            />
          );
@@ -247,13 +277,15 @@ export default function App() {
 
   return (
     <div className="flex h-screen bg-slate-950 text-slate-100 font-cairo overflow-hidden">
-      <Sidebar currentView={currentView} setView={setCurrentView} />
-      
-      <main className="flex-1 relative overflow-y-auto overflow-x-hidden">
-        {renderContent()}
-      </main>
-      
-      <BotChat />
+      <Suspense fallback={<LoadingScreen />}>
+        <Sidebar currentView={currentView} setView={setCurrentView} />
+        
+        <main className="flex-1 relative overflow-y-auto overflow-x-hidden">
+          {renderContent()}
+        </main>
+        
+        <BotChat />
+      </Suspense>
     </div>
   );
 }

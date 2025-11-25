@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { Bot, Code, Layers, Zap, ArrowLeft, Brain, Box, Check, Users, Building, Mail, HelpCircle, FileText, Play, RotateCw, Navigation, Shield, Lock, Eye, TrendingUp, Award, Smartphone, Globe, BookOpen } from 'lucide-react';
+import React, { useState, Suspense, lazy } from 'react';
+import { Bot, Code, Layers, Zap, ArrowLeft, Brain, Box, Check, Users, Building, Mail, HelpCircle, FileText, Play, RotateCw, Navigation, Shield, Lock, Eye, TrendingUp, Award, Smartphone, Globe, BookOpen, Loader2 } from 'lucide-react';
 import { PublicView, RobotConfig } from '../types';
-import SimulationViewport from './SimulationViewport';
-import Simulation3D from './Simulation3D';
+
+// Lazy load simulation components to reduce initial bundle size (avoids loading Three.js immediately)
+const SimulationViewport = lazy(() => import('./SimulationViewport'));
+const Simulation3D = lazy(() => import('./Simulation3D'));
 
 interface LandingPageProps {
   onStart: () => void;
@@ -20,6 +22,13 @@ const DEMO_ROBOT_CONFIG: RobotConfig = {
   },
   color: '#10b981'
 };
+
+const LoadingSpinner = () => (
+    <div className="flex h-full w-full items-center justify-center bg-slate-900 text-slate-400">
+        <Loader2 className="animate-spin text-emerald-500 mr-2" />
+        <span>جاري تحميل المحاكي...</span>
+    </div>
+);
 
 const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
   const [currentPage, setCurrentPage] = useState<PublicView>(PublicView.HOME);
@@ -523,25 +532,27 @@ const DemoContent = ({ onStart }: { onStart: () => void }) => {
 
        <div className="flex-1 bg-slate-900 rounded-3xl border border-slate-800 overflow-hidden relative shadow-2xl">
           <div className="absolute inset-0 z-0">
-             {is3D ? (
-                <Simulation3D 
-                  key={`3d-${simulationKey}`}
-                  config={DEMO_ROBOT_CONFIG}
-                  isRunning={true} 
-                  codeOutput={scenarios[activeScenario]} 
-                  resetSimulation={() => {}}
-                  startPosition={{x: 200, y: 300, angle: 270}}
-                />
-             ) : (
-                <SimulationViewport 
-                  key={`2d-${simulationKey}`}
-                  config={DEMO_ROBOT_CONFIG}
-                  isRunning={true} 
-                  codeOutput={scenarios[activeScenario]} 
-                  resetSimulation={() => {}}
-                  startPosition={{x: 200, y: 300, angle: 270}}
-                />
-             )}
+             <Suspense fallback={<LoadingSpinner />}>
+                {is3D ? (
+                    <Simulation3D 
+                    key={`3d-${simulationKey}`}
+                    config={DEMO_ROBOT_CONFIG}
+                    isRunning={true} 
+                    codeOutput={scenarios[activeScenario]} 
+                    resetSimulation={() => {}}
+                    startPosition={{x: 200, y: 300, angle: 270}}
+                    />
+                ) : (
+                    <SimulationViewport 
+                    key={`2d-${simulationKey}`}
+                    config={DEMO_ROBOT_CONFIG}
+                    isRunning={true} 
+                    codeOutput={scenarios[activeScenario]} 
+                    resetSimulation={() => {}}
+                    startPosition={{x: 200, y: 300, angle: 270}}
+                    />
+                )}
+             </Suspense>
           </div>
           
           {/* Overlay CTA */}
