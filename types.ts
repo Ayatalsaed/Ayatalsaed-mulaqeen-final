@@ -32,7 +32,7 @@ export interface ChatMessage {
   timestamp: Date;
 }
 
-export type SensorType = 'ultrasonic' | 'infrared' | 'color' | 'gyro' | 'camera' | 'lidar' | 'imu';
+export type SensorType = 'ultrasonic' | 'infrared' | 'color' | 'gyro' | 'camera' | 'lidar' | 'imu' | 'gps' | 'camera_depth';
 
 export interface RobotConfig {
   name: string;
@@ -46,6 +46,8 @@ export interface RobotConfig {
     camera?: { resolution: '720p' | '1080p'; illumination?: boolean };
     lidar?: { range: number; sampleRate: number };
     imu?: { accelRange: '2g' | '4g' | '8g'; gyroRange: '250dps' | '500dps' };
+    gps?: { updateRate: '1Hz' | '5Hz' | '10Hz' };
+    camera_depth?: { resolution: '480p' | '720p'; technology: 'Stereo' | 'ToF' };
   };
   color: string;
   branding?: {

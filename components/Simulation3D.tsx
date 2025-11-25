@@ -5,42 +5,6 @@ import * as THREE from 'three';
 import { RobotConfig } from '../types';
 import { RefreshCw, Play } from 'lucide-react';
 
-// Augment JSX namespace to include React Three Fiber elements
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      group: any;
-      mesh: any;
-      boxGeometry: any;
-      meshStandardMaterial: any;
-      cylinderGeometry: any;
-      ringGeometry: any;
-      meshBasicMaterial: any;
-      sphereGeometry: any;
-      ambientLight: any;
-      directionalLight: any;
-    }
-  }
-}
-
-// Augment React.JSX namespace for React 18+ compatibility
-declare module 'react' {
-  namespace JSX {
-    interface IntrinsicElements {
-      group: any;
-      mesh: any;
-      boxGeometry: any;
-      meshStandardMaterial: any;
-      cylinderGeometry: any;
-      ringGeometry: any;
-      meshBasicMaterial: any;
-      sphereGeometry: any;
-      ambientLight: any;
-      directionalLight: any;
-    }
-  }
-}
-
 interface Simulation3DProps {
   config?: RobotConfig;
   isRunning: boolean;

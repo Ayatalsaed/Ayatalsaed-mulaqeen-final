@@ -5,7 +5,7 @@ const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 export const checkCodeWithGemini = async (code: string, taskDescription: string): Promise<string> => {
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3-pro-preview',
       contents: `User Code:\n${code}\n\nTask:\n${taskDescription}`,
       config: {
         systemInstruction: `أنت "مُلَقِّن"، مدرب روبوتات ذكي وودود. 

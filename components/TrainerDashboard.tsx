@@ -1,23 +1,11 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Users, FileText, TrendingUp, AlertCircle, Plus, Search, MoreVertical, CheckCircle, Clock, X, Calendar } from 'lucide-react';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line,
   Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis
 } from 'recharts';
-
-const STUDENTS_DATA = [
-  { id: 1, name: 'أحمد محمد', progress: 85, status: 'Active', lastActive: '2 min ago', avatar: 'AM' },
-  { id: 2, name: 'سارة خالد', progress: 92, status: 'Active', lastActive: '1 hr ago', avatar: 'SK' },
-  { id: 3, name: 'عمر فهد', progress: 45, status: 'Needs Help', lastActive: '2 days ago', avatar: 'OF' },
-  { id: 4, name: 'نورة السعيد', progress: 78, status: 'Active', lastActive: '5 min ago', avatar: 'NS' },
-  { id: 5, name: 'فيصل الراشد', progress: 60, status: 'Inactive', lastActive: '1 week ago', avatar: 'FR' },
-];
-
-const INITIAL_ASSIGNMENTS = [
-  { id: 1, title: 'تحدي المتاهة الذكية', due: '2025-06-15', completed: 18, total: 25, status: 'Active' },
-  { id: 2, title: 'برمجة الحساسات - المستوي 1', due: '2025-06-10', completed: 25, total: 25, status: 'Closed' },
-  { id: 3, title: 'مشروع الذراع الآلي', due: '2025-06-20', completed: 5, total: 25, status: 'Upcoming' },
-];
+import { db, Student, Assignment } from '../services/db';
 
 const PERFORMANCE_DATA = [
   { name: 'Week 1', avg: 65 },
@@ -38,23 +26,30 @@ const SKILLS_DATA = [
 ];
 
 const TrainerDashboard: React.FC = () => {
-  const [assignments, setAssignments] = useState(INITIAL_ASSIGNMENTS);
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTask, setNewTask] = useState({ title: '', due: '' });
+
+  useEffect(() => {
+    setAssignments(db.getAssignments());
+    setStudents(db.getStudents());
+  }, []);
 
   const handleAddTask = () => {
     if (!newTask.title || !newTask.due) return;
     
-    const newAssignment = {
+    const newAssignment: Assignment = {
       id: Date.now(),
       title: newTask.title,
       due: newTask.due,
       completed: 0,
-      total: 25, // Assuming generic class size
+      total: 25, // Generic class size
       status: 'Active'
     };
     
-    setAssignments([newAssignment, ...assignments]);
+    db.addAssignment(newAssignment);
+    setAssignments([newAssignment, ...assignments]); // Optimistic update
     setNewTask({ title: '', due: '' });
     setIsModalOpen(false);
   };
@@ -66,24 +61,32 @@ const TrainerDashboard: React.FC = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h2 className="text-3xl font-bold text-white mb-1">لوحة المدرب</h2>
-          <p className="text-slate-400">إدارة الفصول، متابعة الطلاب، وتقييم الأداء.</p>
+          <p className="text-slate-400">إدارة الفصول، متابعة الطلاب، وتقييم الأداء (قاعدة بيانات محلية).</p>
         </div>
-        <button 
-          onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg font-bold shadow-lg shadow-emerald-600/20 transition-all"
-        >
-          <Plus size={18} />
-          <span>مهمة جديدة</span>
-        </button>
+        <div className="flex gap-3">
+            <button 
+                onClick={() => { if(window.confirm('هل أنت متأكد من تصفير جميع البيانات؟')) db.resetDatabase(); }}
+                className="text-xs text-rose-400 hover:text-rose-300 border border-rose-900/50 px-3 py-2 rounded-lg"
+            >
+                تصفير البيانات
+            </button>
+            <button 
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg font-bold shadow-lg shadow-emerald-600/20 transition-all"
+            >
+            <Plus size={18} />
+            <span>مهمة جديدة</span>
+            </button>
+        </div>
       </div>
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { icon: Users, label: 'إجمالي الطلاب', value: '125', sub: '+12 هذا الأسبوع', color: 'bg-blue-500/10 text-blue-500' },
+          { icon: Users, label: 'إجمالي الطلاب', value: students.length.toString(), sub: '+12 هذا الأسبوع', color: 'bg-blue-500/10 text-blue-500' },
           { icon: FileText, label: 'الواجبات النشطة', value: assignments.filter(a => a.status === 'Active').length.toString(), sub: 'مهام جارية', color: 'bg-emerald-500/10 text-emerald-500' },
           { icon: TrendingUp, label: 'متوسط الأداء', value: '82%', sub: '+5% عن الشهر الماضي', color: 'bg-amber-500/10 text-amber-500' },
-          { icon: AlertCircle, label: 'بحاجة لمساعدة', value: '3', sub: 'طلاب متعثرين', color: 'bg-rose-500/10 text-rose-500' },
+          { icon: AlertCircle, label: 'بحاجة لمساعدة', value: students.filter(s => s.status === 'Needs Help').length.toString(), sub: 'طلاب متعثرين', color: 'bg-rose-500/10 text-rose-500' },
         ].map((stat, idx) => (
           <div key={idx} className="bg-slate-800/50 border border-slate-700 p-5 rounded-2xl flex items-center justify-between hover:border-slate-600 transition-colors">
             <div>
@@ -126,7 +129,7 @@ const TrainerDashboard: React.FC = () => {
                    </tr>
                 </thead>
                 <tbody className="text-sm">
-                   {STUDENTS_DATA.map((student) => (
+                   {students.map((student) => (
                       <tr key={student.id} className="group border-b border-slate-700/50 last:border-0 hover:bg-slate-700/20 transition-colors">
                          <td className="py-3 pr-2">
                             <div className="flex items-center gap-3">

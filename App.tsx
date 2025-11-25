@@ -1,7 +1,9 @@
-import React, { useState, Suspense, lazy } from 'react';
+
+import React, { useState, Suspense, lazy, useEffect } from 'react';
 import LandingPage from './components/LandingPage';
 import { View, Challenge, RobotConfig } from './types';
 import { Bot, Cpu, Sliders, Box, Layers, Loader2 } from 'lucide-react';
+import { db } from './services/db';
 
 // Lazy Load Components
 const Sidebar = lazy(() => import('./components/Sidebar'));
@@ -24,12 +26,6 @@ def run_robot():
 run_robot()
 `;
 
-const INITIAL_CHALLENGES: Challenge[] = [
-  { id: 1, title: 'التحرك في المربع', description: 'برمج الروبوت ليتحرك في مسار مربع الشكل.', difficulty: 'Easy', completed: true },
-  { id: 2, title: 'تفادي العقبات', description: 'استخدم حساس المسافة لتجنب الجدار.', difficulty: 'Medium', completed: false },
-  { id: 3, title: 'اتباع الخط الأسود', description: 'استخدم حساسات الأشعة تحت الحمراء.', difficulty: 'Hard', completed: false },
-];
-
 const LoadingScreen = () => (
   <div className="flex h-full w-full flex-col items-center justify-center bg-slate-950 text-slate-300">
     <Loader2 className="h-10 w-10 animate-spin text-emerald-500 mb-4" />
@@ -45,27 +41,45 @@ export default function App() {
   const [simCommands, setSimCommands] = useState<any[]>([]);
   const [is3DMode, setIs3DMode] = useState(false);
   
-  const [robotConfig, setRobotConfig] = useState<RobotConfig>({
-    name: 'المستكشف 1',
-    type: 'rover',
-    sensors: ['ultrasonic'],
-    sensorConfig: {
-      ultrasonic: { range: 200 },
-      infrared: { sensitivity: 50 },
-      color: { illumination: true },
-      gyro: { axis: '3-axis' },
-      camera: { resolution: '720p', illumination: false },
-      lidar: { range: 8, sampleRate: 4000 },
-      imu: { accelRange: '4g', gyroRange: '500dps' }
-    },
-    color: '#10b981',
-    branding: {
-      primaryColor: '#10b981',
-      secondaryColor: '#334155'
+  // State loaded from DB
+  const [robotConfig, setRobotConfig] = useState<RobotConfig | null>(null);
+  const [challenges, setChallenges] = useState<Challenge[]>([]);
+
+  // Load data on mount
+  useEffect(() => {
+    const config = db.getRobotConfig();
+    const loadedChallenges = db.getChallenges();
+    setRobotConfig(config);
+    setChallenges(loadedChallenges);
+  }, []);
+
+  const handleSaveConfig = () => {
+    if (robotConfig) {
+      db.saveRobotConfig(robotConfig);
+      // Create a JSON blob from the configuration
+      const jsonString = JSON.stringify(robotConfig, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      
+      // Create a temporary link element to trigger download
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${robotConfig.name.replace(/\s+/g, '_')}_config.json`;
+      document.body.appendChild(link);
+      link.click();
+      
+      // Cleanup
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      // Show confirmation and navigate
+      alert(`تم حفظ التكوين في قاعدة البيانات المحلية وتحميل الملف: ${link.download}`);
+      setCurrentView(View.EDITOR);
     }
-  });
+  };
 
   const handleRunCode = () => {
+    if (!robotConfig) return;
     setIsRunning(true);
     setLogs([]);
     setSimCommands([]);
@@ -124,10 +138,15 @@ export default function App() {
     return <LandingPage onStart={() => setCurrentView(View.DASHBOARD)} />;
   }
 
+  // Wait for DB load
+  if (!robotConfig) {
+    return <LoadingScreen />;
+  }
+
   const renderContent = () => {
     switch (currentView) {
       case View.DASHBOARD:
-        return <Dashboard challenges={INITIAL_CHALLENGES} />;
+        return <Dashboard challenges={challenges} />;
       
       case View.TRAINER_DASHBOARD:
         return <TrainerDashboard />;
@@ -246,27 +265,7 @@ export default function App() {
            <RobotBuilder 
              config={robotConfig} 
              setConfig={setRobotConfig} 
-             onSave={() => {
-                // Create a JSON blob from the configuration
-                const jsonString = JSON.stringify(robotConfig, null, 2);
-                const blob = new Blob([jsonString], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                
-                // Create a temporary link element to trigger download
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `${robotConfig.name.replace(/\s+/g, '_')}_config.json`;
-                document.body.appendChild(link);
-                link.click();
-                
-                // Cleanup
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
-
-                // Show confirmation and navigate
-                alert(`تم تحميل ملف التكوين: ${link.download}`);
-                setCurrentView(View.EDITOR);
-             }} 
+             onSave={handleSaveConfig} 
            />
          );
 

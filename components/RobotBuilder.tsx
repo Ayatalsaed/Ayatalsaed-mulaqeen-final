@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Wifi, 
@@ -23,7 +24,11 @@ import {
   ChevronUp,
   Palette,
   Upload,
-  X
+  X,
+  Download,
+  Share2,
+  Globe,
+  Layers
 } from 'lucide-react';
 import { RobotConfig, SensorType } from '../types';
 
@@ -60,7 +65,7 @@ const SENSORS: {
     name: 'LiDAR ماسح ضوئي', 
     desc: 'لرسم الخرائط وبناء بيئة ثلاثية الأبعاد (SLAM).', 
     details: 'يرسل نبضات ليزر سريعة لرسم خريطة نقطية للمحيط 360 درجة. يستخدم في القيادة الذاتية والملاحة المتقدمة (SLAM).',
-    icon: Radar, 
+    icon: Scan, 
     power: 45, 
     weight: 160,
     category: 'distance'
@@ -83,6 +88,16 @@ const SENSORS: {
     icon: Video, 
     power: 15, 
     weight: 25,
+    category: 'vision'
+  },
+  { 
+    id: 'camera_depth',
+    name: 'كاميرا العمق (Depth)',
+    desc: 'لقياس عمق المشهد بدقة عالية.',
+    details: 'توفر خريطة عمق ثلاثية الأبعاد للبيئة، مما يساعد الروبوت على فهم أبعاد الأجسام والمسافات بدقة.',
+    icon: Layers,
+    power: 25,
+    weight: 40,
     category: 'vision'
   },
   { 
@@ -114,6 +129,16 @@ const SENSORS: {
     power: 2, 
     weight: 5,
     category: 'navigation'
+  },
+  { 
+    id: 'gps', 
+    name: 'وحدة GPS', 
+    desc: 'لتحديد الموقع الجغرافي (خارجي).', 
+    details: 'تستقبل إشارات الأقمار الصناعية لتحديد إحداثيات الروبوت بدقة في البيئات الخارجية المفتوحة.',
+    icon: Globe, 
+    power: 12, 
+    weight: 15,
+    category: 'navigation'
   }
 ];
 
@@ -130,7 +155,9 @@ const DEFAULT_CONFIGS: Partial<Record<SensorType, any>> = {
   gyro: { axis: '3-axis' },
   camera: { resolution: '720p', illumination: false },
   lidar: { range: 8, sampleRate: 4000 },
-  imu: { accelRange: '4g', gyroRange: '500dps' }
+  imu: { accelRange: '4g', gyroRange: '500dps' },
+  gps: { updateRate: '1Hz' },
+  camera_depth: { resolution: '480p', technology: 'Stereo' }
 };
 
 // --- Helper UI Components ---
@@ -197,19 +224,26 @@ const ConfigSelect = ({ label, options, value, onChange, description, onReset }:
         )}
     </div>
     <div className="bg-slate-900 rounded-lg p-1 flex gap-1 border border-slate-700/50">
-        {options.map((opt: string) => (
-            <button
-                key={opt}
-                onClick={() => onChange(opt)}
-                className={`flex-1 py-1.5 text-xs rounded font-medium transition-all focus:outline-none ${
-                    value === opt 
-                    ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/20' 
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
-                }`}
-            >
-                {opt}
-            </button>
-        ))}
+        {options.map((opt: any) => {
+            const isString = typeof opt === 'string';
+            const optionLabel = isString ? opt : opt.label;
+            const optionValue = isString ? opt : opt.value;
+            const isActive = value === optionValue;
+            
+            return (
+                <button
+                    key={optionValue}
+                    onClick={() => onChange(optionValue)}
+                    className={`flex-1 py-1.5 text-xs rounded font-medium transition-all focus:outline-none ${
+                        isActive 
+                        ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/20' 
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+                    }`}
+                >
+                    {optionLabel}
+                </button>
+            );
+        })}
     </div>
   </div>
 );
@@ -353,6 +387,40 @@ const RobotBuilder: React.FC<RobotBuilderProps> = ({ config, setConfig, onSave }
     setExpandedSensors(defaultSensors);
   };
 
+  const handleExport = () => {
+    const jsonString = JSON.stringify(config, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${(config.name || 'robot').replace(/\s+/g, '_')}_config.json`;
+    document.body.appendChild(link);
+    link.click();
+    
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleShareSnapshot = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: `لقطة من ${config.name}`,
+          text: 'تم التقاط هذه الصورة بواسطة كاميرا الروبوت الذكي في منصة مُلَقِّن.',
+          url: window.location.href,
+        });
+      } else {
+        // Fallback / Simulation
+        alert('تم التقاط الصورة ومشاركتها (محاكاة)');
+      }
+    } catch (err) {
+      console.error('Sharing failed', err);
+    }
+  };
+
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -395,6 +463,14 @@ const RobotBuilder: React.FC<RobotBuilderProps> = ({ config, setConfig, onSave }
               >
                 <RotateCcw size={18} />
                 <span className="hidden sm:inline">تحميل الافتراضي</span>
+              </button>
+              <button 
+                onClick={handleExport}
+                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-3 rounded-xl font-bold transition-all hover:scale-105 active:scale-95 shadow-lg shadow-blue-600/20"
+                title="تصدير التكوين كملف JSON"
+              >
+                <Download size={20} />
+                <span className="hidden sm:inline">تصدير</span>
               </button>
               <button 
                 onClick={onSave}
@@ -527,6 +603,21 @@ const RobotBuilder: React.FC<RobotBuilderProps> = ({ config, setConfig, onSave }
                       <Crosshair size={12} className="text-blue-400" />
                     </div>
                   )}
+
+                  {config.sensors.includes('gps') && (
+                    <div className="absolute top-2 right-2 bg-emerald-500/20 border border-emerald-500 p-1 rounded shadow-lg shadow-emerald-500/20" title="GPS">
+                      <Globe size={12} className="text-emerald-400" />
+                    </div>
+                  )}
+
+                  {config.sensors.includes('camera_depth') && (
+                    <div className="absolute -top-5 right-[20%] translate-x-1/2 bg-slate-900 border border-slate-600 p-1 rounded-lg shadow-xl z-20" title="Depth Camera">
+                       <div className="flex gap-1">
+                          <div className="w-3 h-3 bg-slate-950 rounded-full border border-slate-700"></div>
+                          <div className="w-3 h-3 bg-slate-950 rounded-full border border-slate-700"></div>
+                       </div>
+                    </div>
+                  )}
                </div>
             </div>
 
@@ -547,7 +638,11 @@ const RobotBuilder: React.FC<RobotBuilderProps> = ({ config, setConfig, onSave }
                                 onChange={(e) => setConfig({
                                     ...config, 
                                     color: e.target.value,
-                                    branding: { ...config.branding, primaryColor: e.target.value, secondaryColor: secondaryColor }
+                                    branding: { 
+                                      primaryColor: e.target.value, 
+                                      secondaryColor: config.branding?.secondaryColor || '#475569',
+                                      logo: config.branding?.logo 
+                                    }
                                 })}
                                 className="w-8 h-8 rounded cursor-pointer border-0 p-0 bg-transparent"
                             />
@@ -562,7 +657,11 @@ const RobotBuilder: React.FC<RobotBuilderProps> = ({ config, setConfig, onSave }
                                 value={secondaryColor}
                                 onChange={(e) => setConfig({
                                     ...config, 
-                                    branding: { ...config.branding, primaryColor: primaryColor, secondaryColor: e.target.value }
+                                    branding: { 
+                                        primaryColor: config.branding?.primaryColor || primaryColor, 
+                                        secondaryColor: e.target.value,
+                                        logo: config.branding?.logo
+                                    }
                                 })}
                                 className="w-8 h-8 rounded cursor-pointer border-0 p-0 bg-transparent"
                             />
@@ -623,7 +722,6 @@ const RobotBuilder: React.FC<RobotBuilderProps> = ({ config, setConfig, onSave }
 
           {/* Right Column: Sensor Selection with Accordions */}
           <div className="lg:col-span-2">
-            {/* ... existing sensor code ... */}
             <div className="flex items-center justify-between mb-6">
                <h3 className="text-xl font-bold text-white flex items-center gap-2">
                   <Cpu className="text-emerald-500" />
@@ -755,10 +853,13 @@ const RobotBuilder: React.FC<RobotBuilderProps> = ({ config, setConfig, onSave }
 
                                                 {sensor.id === 'gyro' && (
                                                     <ConfigSelect 
-                                                        label="عدد المحاور"
-                                                        description="3 محاور تقيس الدوران فقط. 6 محاور تضيف مقياس تسارع لزيادة الدقة في المنحدرات والحركات المعقدة."
-                                                        options={['3-axis', '6-axis']}
-                                                        value={config.sensorConfig.gyro?.axis}
+                                                        label="نمط الاستشعار"
+                                                        description="3-Axis: جيروسكوب فقط (دوران). 6-Axis: يضيف مقياس تسارع لزيادة الدقة ومقاومة الانجراف."
+                                                        options={[
+                                                            { label: '3-Axis (Standard)', value: '3-axis' },
+                                                            { label: '6-Axis (Pro)', value: '6-axis' }
+                                                        ]}
+                                                        value={config.sensorConfig.gyro?.axis || '3-axis'}
                                                         onChange={(v: any) => updateSensorConfig('gyro', 'axis', v)}
                                                     />
                                                 )}
@@ -779,6 +880,15 @@ const RobotBuilder: React.FC<RobotBuilderProps> = ({ config, setConfig, onSave }
                                                             value={config.sensorConfig.camera?.illumination || false}
                                                             onChange={(v: boolean) => updateSensorConfig('camera', 'illumination', v)}
                                                         />
+                                                        <div className="pt-2 border-t border-slate-800/50 mt-2">
+                                                            <button
+                                                                onClick={handleShareSnapshot}
+                                                                className="w-full flex items-center justify-center gap-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/20 py-2 rounded-lg text-xs font-bold transition-all"
+                                                            >
+                                                                <Share2 size={14} />
+                                                                <span>مشاركة لقطة</span>
+                                                            </button>
+                                                        </div>
                                                     </>
                                                 )}
 
@@ -816,6 +926,37 @@ const RobotBuilder: React.FC<RobotBuilderProps> = ({ config, setConfig, onSave }
                                                             options={['250dps', '500dps']}
                                                             value={config.sensorConfig.imu?.gyroRange}
                                                             onChange={(v: any) => updateSensorConfig('imu', 'gyroRange', v)}
+                                                        />
+                                                    </>
+                                                )}
+
+                                                {sensor.id === 'gps' && (
+                                                    <>
+                                                        <ConfigDropdown
+                                                            label="معدل التحديث (Update Rate)"
+                                                            description="عدد مرات تحديث الموقع في الثانية. المعدل الأعلى يستهلك طاقة أكبر."
+                                                            options={['1Hz', '5Hz', '10Hz']}
+                                                            value={config.sensorConfig.gps?.updateRate || '1Hz'}
+                                                            onChange={(v: any) => updateSensorConfig('gps', 'updateRate', v)}
+                                                        />
+                                                    </>
+                                                )}
+
+                                                {sensor.id === 'camera_depth' && (
+                                                    <>
+                                                        <ConfigSelect 
+                                                            label="الدقة"
+                                                            description="دقة خريطة العمق. الدقة العالية تتطلب معالجة أكبر."
+                                                            options={['480p', '720p']}
+                                                            value={config.sensorConfig.camera_depth?.resolution || '480p'}
+                                                            onChange={(v: any) => updateSensorConfig('camera_depth', 'resolution', v)}
+                                                        />
+                                                        <ConfigSelect 
+                                                            label="التقنية"
+                                                            description="Stereo: كاميرتين (أرخص، دقة أقل في الظلام). ToF: ليزر (أغلى، دقة عالية)."
+                                                            options={['Stereo', 'ToF']}
+                                                            value={config.sensorConfig.camera_depth?.technology || 'Stereo'}
+                                                            onChange={(v: any) => updateSensorConfig('camera_depth', 'technology', v)}
                                                         />
                                                     </>
                                                 )}
