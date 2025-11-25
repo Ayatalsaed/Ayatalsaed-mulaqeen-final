@@ -123,7 +123,7 @@ const DEFAULT_CONFIGS: Partial<Record<SensorType, any>> = {
 // --- Helper UI Components ---
 
 const ConfigSlider = ({ label, value, min, max, step = 1, unit, onChange, leftLabel, rightLabel }: any) => (
-  <div className="space-y-3 bg-slate-900/30 p-3 rounded-xl border border-slate-800/50">
+  <div className="space-y-3 bg-slate-900/30 p-3 rounded-xl border border-slate-800/50 hover:border-slate-700/50 transition-colors">
     <div className="flex justify-between text-xs text-slate-400">
         <span className="flex items-center gap-1 font-medium">{label}</span>
         <span className="text-emerald-400 font-mono bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
@@ -138,7 +138,7 @@ const ConfigSlider = ({ label, value, min, max, step = 1, unit, onChange, leftLa
             onChange={(e) => onChange(parseInt(e.target.value))}
             className="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500 hover:accent-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all"
         />
-        <div className="flex justify-between text-[10px] text-slate-600 font-mono mt-1">
+        <div className="flex justify-between text-[10px] text-slate-600 font-mono mt-1" dir="ltr">
             <span>{leftLabel || `${min}${unit}`}</span>
             <span>{rightLabel || `${max}${unit}`}</span>
         </div>
@@ -147,7 +147,7 @@ const ConfigSlider = ({ label, value, min, max, step = 1, unit, onChange, leftLa
 );
 
 const ConfigSelect = ({ label, options, value, onChange }: any) => (
-  <div className="space-y-2 bg-slate-900/30 p-3 rounded-xl border border-slate-800/50">
+  <div className="space-y-2 bg-slate-900/30 p-3 rounded-xl border border-slate-800/50 hover:border-slate-700/50 transition-colors">
     <span className="text-xs text-slate-400 font-medium block">{label}</span>
     <div className="bg-slate-900 rounded-lg p-1 flex gap-1 border border-slate-700/50">
         {options.map((opt: string) => (

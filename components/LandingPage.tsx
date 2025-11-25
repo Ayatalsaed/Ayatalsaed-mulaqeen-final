@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bot, Code, Layers, Zap, ArrowLeft, Brain, Box, Check, Users, Building, Mail, HelpCircle, FileText, Play, RotateCw, Navigation } from 'lucide-react';
+import { Bot, Code, Layers, Zap, ArrowLeft, Brain, Box, Check, Users, Building, Mail, HelpCircle, FileText, Play, RotateCw, Navigation, Shield, Lock, Eye, TrendingUp, Award, Smartphone, Globe, BookOpen } from 'lucide-react';
 import { PublicView, RobotConfig } from '../types';
 import SimulationViewport from './SimulationViewport';
 import Simulation3D from './Simulation3D';
@@ -157,7 +157,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
                 المعيار العربي الأول لتعليم الروبوتات وبرمجة الأنظمة الذكية. محاكاة، ذكاء اصطناعي، ومناهج متكاملة.
               </p>
               <div className="flex gap-4">
-                 {/* Social placeholders */}
                  <div className="w-8 h-8 bg-slate-800 rounded-full flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-colors cursor-pointer"><Mail size={14}/></div>
               </div>
             </div>
@@ -273,29 +272,73 @@ const HomeContent = ({ onStart, setPage }: { onStart: () => void, setPage: (v: P
 );
 
 const AboutContent = () => (
-  <div className="max-w-4xl mx-auto px-6 py-20">
-    <div className="text-center mb-12">
-       <span className="text-emerald-500 font-bold tracking-wider text-sm uppercase">قصتنا</span>
-       <h2 className="text-4xl font-bold mt-2">لماذا سمي المشروع "مُلَقِّن"؟</h2>
-    </div>
-    <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 lg:p-12 mb-12 relative overflow-hidden">
-       <div className="absolute top-0 left-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl"></div>
-       <p className="text-lg text-slate-300 leading-relaxed mb-6">
-         لأن دوره ليس فقط تعليم البرمجة، بل <strong>"تلقين"</strong> المستخدم طريقة التفكير الروبوتي (منطق، حساسات، حركة، معالجة، تكرار، شرط...). اسم عربي أصيل ومعبّر، ويحمل معنى التوجيه والتأسيس الصحيح.
-       </p>
-       <p className="text-lg text-slate-300 leading-relaxed">
-         مُلَقِّن هو محاكي روبوتات تفاعلي صُمّم لتعليم المتعلمين أساسيات بناء الروبوتات، برمجتها، تشغيلها، والربط بينها داخليًا—كل هذا داخل بيئة محاكاة ثلاثية الأبعاد تعتمد على الذكاء الاصطناعي وتعمل بالكامل عبر المتصفح.
+  <div className="max-w-5xl mx-auto px-6 py-20">
+    {/* Hero Section of About */}
+    <div className="text-center mb-16">
+       <span className="text-emerald-500 font-bold tracking-wider text-sm uppercase bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">قصتنا ورؤيتنا</span>
+       <h2 className="text-4xl md:text-5xl font-bold mt-6 mb-6">بناء جيل من المبتكرين</h2>
+       <p className="text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
+         في عالم يتسارع فيه التطور التقني، نؤمن بأن تعليم الروبوتات والبرمجة حق للجميع، وليس حكراً على من يملك المعامل المجهزة.
        </p>
     </div>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-       <div className="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl">
-          <h3 className="text-xl font-bold text-white mb-3">الرؤية</h3>
-          <p className="text-slate-400">تحويل مُـلَقِّن إلى المعيار العربي الأول لتعليم الروبوتات وبرمجة الأنظمة الذكية.</p>
+
+    {/* Story Section */}
+    <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 lg:p-12 mb-20 relative overflow-hidden">
+       <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl -z-10"></div>
+       <div className="absolute bottom-0 left-0 w-40 h-40 bg-blue-500/5 rounded-full blur-3xl -z-10"></div>
+       
+       <h3 className="text-2xl font-bold text-white mb-6">قصة البداية</h3>
+       <div className="space-y-6 text-lg text-slate-300 leading-relaxed">
+         <p>
+           انطلقت منصة <strong>مُلَقِّن</strong> في عام 2024 بمبادرة من مجموعة مهندسين ومبرمجين عرب لاحظوا الصعوبات التي تواجه المدارس والطلاب في الوصول إلى أدوات تعليم الروبوتات الحديثة. كانت التكاليف المرتفعة لمجموعات الروبوت (Hardware Kits) وصعوبة صيانتها عائقاً كبيراً أمام انتشار هذه المعرفة.
+         </p>
+         <p>
+           لذا قررنا بناء حل جذري: منصة سحابية متكاملة (Cloud-based Robotics Lab) تتيح للطالب تصميم وبناء وبرمجة الروبوتات في بيئة افتراضية تحاكي القوانين الفيزيائية بدقة عالية. لم نكتفِ بذلك، بل أضفنا "المُلَقِّن الذكي"، وهو مساعد مبني على الذكاء الاصطناعي التوليدي يقوم بدور المعلم الخصوصي، يصحح الأكواد ويشرح المفاهيم المعقدة بأسلوب مبسط.
+         </p>
+         <p>
+           نطمح اليوم لأن نكون البنية التحتية الرقمية لتعليم تقنيات المستقبل في كل مدرسة ومنزل عربي، مساهمين في تحقيق رؤى المنطقة نحو الاقتصاد الرقمي والصناعي.
+         </p>
        </div>
-       <div className="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl">
-          <h3 className="text-xl font-bold text-white mb-3">الرسالة</h3>
-          <p className="text-slate-400">دمج التعليم التطبيقي التقليدي مع أدوات الذكاء الاصطناعي لتقديم تجربة تعلم متاحة للجميع.</p>
+    </div>
+
+    {/* Vision & Mission Cards */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+       <div className="bg-slate-800/40 border border-slate-700 p-8 rounded-2xl hover:bg-slate-800/60 transition-colors">
+          <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center text-blue-400 mb-6">
+            <Eye size={24} />
+          </div>
+          <h3 className="text-2xl font-bold text-white mb-4">رؤيتنا</h3>
+          <p className="text-slate-400 leading-relaxed">
+            أن نكون المنصة المرجعية الأولى في الشرق الأوسط وشمال أفريقيا لتعليم تقنيات الثورة الصناعية الرابعة، وتمكين مليون طالب عربي من مهارات المستقبل بحلول 2030.
+          </p>
        </div>
+       <div className="bg-slate-800/40 border border-slate-700 p-8 rounded-2xl hover:bg-slate-800/60 transition-colors">
+          <div className="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center text-emerald-400 mb-6">
+            <TrendingUp size={24} />
+          </div>
+          <h3 className="text-2xl font-bold text-white mb-4">رسالتنا</h3>
+          <p className="text-slate-400 leading-relaxed">
+            توفير بيئة تعليمية تفاعلية، ممتعة، ومنخفضة التكلفة، تكسر حواجز الدخول لمجال الروبوتات، وتوفر أدوات تقييم ذكية للمعلمين والمدارس.
+          </p>
+       </div>
+    </div>
+
+    {/* Values Grid */}
+    <h3 className="text-2xl font-bold text-center mb-10">قيمنا الجوهرية</h3>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {[
+            { t: 'الابتكار المستمر', d: 'نحدث مناهجنا وأدواتنا أسبوعياً لتواكب التكنولوجيا.', i: Zap },
+            { t: 'الوصول للجميع', d: 'نعمل لتعمل المنصة على أبسط الأجهزة المدرسية.', i: Globe },
+            { t: 'المجتمع أولاً', d: 'ندعم المصادر المفتوحة ونشارك المعرفة مع المجتمع التقني.', i: Users }
+        ].map((v, i) => (
+            <div key={i} className="text-center p-6 bg-slate-900 rounded-xl border border-slate-800 hover:border-emerald-500/30 transition-colors">
+                <div className="w-12 h-12 mx-auto bg-slate-800 rounded-full flex items-center justify-center text-emerald-500 mb-4">
+                    <v.i size={20} />
+                </div>
+                <h4 className="text-lg font-bold text-white mb-2">{v.t}</h4>
+                <p className="text-sm text-slate-400">{v.d}</p>
+            </div>
+        ))}
     </div>
   </div>
 );
@@ -311,10 +354,10 @@ const HowItWorksContent = () => (
       <div className="hidden lg:block absolute top-12 left-0 w-full h-0.5 bg-slate-800 -z-10"></div>
       
       {[
-        { step: '01', title: 'اختر البيئة', desc: 'حدد نوع التحدي (متاهة، تتبع خط، ذراع آلي...)' },
-        { step: '02', title: 'ابنِ الروبوت', desc: 'ركب القطع والحساسات (Blocks) المناسبة للمهمة.' },
-        { step: '03', title: 'برمج بذكاء', desc: 'استخدم البلوكات أو Python مع مساعدة AI.' },
-        { step: '04', title: 'اختبر وحسن', desc: 'شاهد المحاكاة واحصل على تقرير أداء فوري.' },
+        { step: '01', title: 'اختر البيئة', desc: 'حدد نوع التحدي (متاهة، تتبع خط، ذراع آلي...) ومستوى الصعوبة.' },
+        { step: '02', title: 'ابنِ الروبوت', desc: 'ركب القطع والحساسات (Blocks) المناسبة للمهمة من ورشة العمل.' },
+        { step: '03', title: 'برمج بذكاء', desc: 'استخدم البلوكات للمبتدئين أو Python للمتقدمين مع مساعدة AI.' },
+        { step: '04', title: 'اختبر وحسن', desc: 'شاهد المحاكاة ثلاثية الأبعاد واحصل على تقرير أداء فوري من المُلَقِّن.' },
       ].map((item, i) => (
         <div key={i} className="bg-slate-900 border border-slate-800 p-6 rounded-2xl relative">
            <div className="w-12 h-12 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center text-xl font-bold text-emerald-500 mb-4 shadow-xl">
@@ -325,34 +368,70 @@ const HowItWorksContent = () => (
         </div>
       ))}
     </div>
+    
+    <div className="mt-20 bg-slate-900 border border-slate-800 rounded-3xl p-8 flex flex-col md:flex-row items-center gap-8">
+        <div className="flex-1">
+            <h3 className="text-2xl font-bold text-white mb-4">ماذا تحتاج لتبدأ؟</h3>
+            <ul className="space-y-4">
+                <li className="flex items-center gap-3 text-slate-300">
+                    <Check className="text-emerald-500" size={20} />
+                    <span>جهاز كمبيوتر أو جهاز لوحي (متصفح Chrome/Edge)</span>
+                </li>
+                <li className="flex items-center gap-3 text-slate-300">
+                    <Check className="text-emerald-500" size={20} />
+                    <span>اتصال بالإنترنت (المنصة سحابية بالكامل)</span>
+                </li>
+                <li className="flex items-center gap-3 text-slate-300">
+                    <Check className="text-emerald-500" size={20} />
+                    <span>شغف للتعلم (لا يتطلب خبرة برمجية مسبقة)</span>
+                </li>
+            </ul>
+        </div>
+        <div className="flex-1 flex justify-center">
+            <Smartphone size={120} className="text-slate-700 opacity-50" />
+        </div>
+    </div>
   </div>
 );
 
-const FeaturesContent = () => (
-  <div className="max-w-6xl mx-auto px-6 py-20">
+const FeaturesContent = () => {
+  const colorClasses: Record<string, {bg: string, text: string}> = {
+      emerald: { bg: 'bg-emerald-500/10', text: 'text-emerald-500' },
+      blue: { bg: 'bg-blue-500/10', text: 'text-blue-500' },
+      amber: { bg: 'bg-amber-500/10', text: 'text-amber-500' },
+      purple: { bg: 'bg-purple-500/10', text: 'text-purple-500' },
+      cyan: { bg: 'bg-cyan-500/10', text: 'text-cyan-500' },
+      rose: { bg: 'bg-rose-500/10', text: 'text-rose-500' },
+  };
+
+  return (
+  <div className="max-w-7xl mx-auto px-6 py-20">
     <div className="text-center mb-16">
-       <h2 className="text-4xl font-bold">مزايا تقنية متقدمة</h2>
+       <span className="text-emerald-500 font-bold tracking-wider text-sm uppercase">مميزات المنصة</span>
+       <h2 className="text-4xl font-bold mt-2">تقنيات متقدمة لتعليم المستقبل</h2>
     </div>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-       {[
-         "مكتبة روبوتات جاهزة",
-         "برمجة مرئية (Blocks) و نصية (Python)",
-         "نظام فيزياء واقعي (تصادم، احتكاك)",
-         "ذكاء اصطناعي يصحح الأخطاء",
-         "لوحة تحكم للمعلم والطالب",
-         "تصدير المشاريع ومشاركتها",
-         "دعم الحساسات (IR, Ultrasonic, Gyro)",
-         "بيئات تدريب متعددة (خط، متاهة...)",
-         "نظام إنجازات وتحديات"
-       ].map((feat, i) => (
-         <div key={i} className="flex items-start gap-4 p-4 bg-slate-900/50 rounded-xl border border-slate-800/50">
-            <div className="mt-1 bg-emerald-500/10 p-1 rounded-full text-emerald-500"><Check size={16} /></div>
-            <span className="text-slate-300 font-medium">{feat}</span>
-         </div>
-       ))}
+
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        {[
+            { icon: Layers, color: 'emerald', title: "فيزياء واقعية", desc: "محرك محاكاة يحاكي الجاذبية، الاحتكاك، وتصادم الأجسام، مما يجعل تجربة البرمجة مطابقة للواقع." },
+            { icon: Code, color: 'blue', title: "محرر متعدد المستويات", desc: "ابدأ بالسحب والإفلات (Blocks) وانتقل تدريجياً لكتابة كود Python الاحترافي في نفس البيئة." },
+            { icon: Award, color: 'amber', title: "نظام التلعيب (Gamification)", desc: "احصل على نقاط، أوسمة، وتصدر قوائم المتصدرين مع كل تحدٍ تنجزه لزيادة الحماس." },
+            { icon: Brain, color: 'purple', title: "المعلم الذكي AI", desc: "مساعد شخصي متاح 24/7 يحلل الكود، يشرح الأخطاء، ويقترح تحسينات بناءً على أسلوبك." },
+            { icon: Globe, color: 'cyan', title: "ثنائي اللغة", desc: "واجهة ومحتوى يدعمان اللغة العربية والإنجليزية بالكامل، مع إمكانية التبديل الفوري." },
+            { icon: Smartphone, color: 'rose', title: "يعمل على أي جهاز", desc: "لا حاجة لأجهزة كمبيوتر باهظة. المنصة تعمل بسلاسة على المتصفح حتى على الأجهزة اللوحية." }
+        ].map((item, i) => (
+             <div key={i} className="bg-slate-900 p-8 rounded-3xl border border-slate-800 hover:border-slate-600 transition-colors group">
+                <div className={`w-14 h-14 ${colorClasses[item.color].bg} rounded-2xl flex items-center justify-center ${colorClasses[item.color].text} mb-6 group-hover:scale-110 transition-transform`}>
+                    <item.icon size={32} />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-4">{item.title}</h3>
+                <p className="text-sm text-slate-400 leading-relaxed">{item.desc}</p>
+            </div>
+        ))}
     </div>
   </div>
-);
+  );
+};
 
 const DemoContent = ({ onStart }: { onStart: () => void }) => {
   const [activeScenario, setActiveScenario] = useState<'square' | 'zigzag' | 'complex'>('square');
@@ -559,30 +638,78 @@ const PricingContent = () => (
 );
 
 const SchoolsContent = () => (
-  <div className="max-w-5xl mx-auto px-6 py-20">
-    <div className="flex flex-col md:flex-row items-center gap-12">
+  <div className="max-w-6xl mx-auto px-6 py-20">
+    <div className="flex flex-col md:flex-row items-center gap-12 mb-20">
        <div className="flex-1">
-          <h2 className="text-4xl font-bold mb-6">مُلَقِّن للمدارس</h2>
-          <p className="text-slate-400 text-lg leading-relaxed mb-6">
-            نقدم للمدارس منصة متكاملة لدمج تعليم الروبوتات في المناهج الدراسية دون الحاجة لتكاليف المعامل الباهظة.
+          <span className="text-emerald-500 font-bold tracking-wider text-sm uppercase">بوابة المدارس</span>
+          <h2 className="text-4xl font-bold mb-6 mt-2">تحول رقمي شامل لمعامل الروبوت</h2>
+          <p className="text-slate-400 text-lg leading-relaxed mb-8">
+            نقدم للمدارس منصة متكاملة لدمج تعليم الروبوتات في المناهج الدراسية دون الحاجة لتكاليف المعامل الباهظة أو الصيانة المعقدة. حل سحابي يعمل على أجهزة المدرسة الحالية.
           </p>
-          <ul className="space-y-4 mb-8">
-             <li className="flex items-center gap-3"><Users className="text-emerald-500"/> إدارة فصول وطلاب سهلة</li>
-             <li className="flex items-center gap-3"><FileText className="text-emerald-500"/> تقارير أداء ومتابعة فورية</li>
-             <li className="flex items-center gap-3"><Brain className="text-emerald-500"/> مناهج STEM جاهزة ومتوافقة</li>
-          </ul>
-          <button className="bg-emerald-600 hover:bg-emerald-500 px-8 py-3 rounded-xl font-bold">طلب عرض تجريبي</button>
-       </div>
-       <div className="flex-1 bg-slate-800 p-8 rounded-3xl border border-slate-700">
-          <h3 className="text-xl font-bold mb-4 text-center">انضم لشركاء النجاح</h3>
-          {/* Mock Logos */}
-          <div className="grid grid-cols-2 gap-4 opacity-50">
-             <div className="h-12 bg-slate-700 rounded flex items-center justify-center">School A</div>
-             <div className="h-12 bg-slate-700 rounded flex items-center justify-center">Academy B</div>
-             <div className="h-12 bg-slate-700 rounded flex items-center justify-center">Inst C</div>
-             <div className="h-12 bg-slate-700 rounded flex items-center justify-center">Edu D</div>
+          <div className="flex flex-col sm:flex-row gap-4">
+             <button className="bg-emerald-600 hover:bg-emerald-500 px-8 py-3 rounded-xl font-bold text-white shadow-lg shadow-emerald-600/20">طلب عرض تجريبي</button>
+             <button className="bg-slate-800 hover:bg-slate-700 border border-slate-700 px-8 py-3 rounded-xl font-bold text-white">تحميل البروشور</button>
           </div>
        </div>
+       <div className="flex-1 bg-slate-800/50 p-8 rounded-3xl border border-slate-700 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-blue-500"></div>
+          <h3 className="text-xl font-bold mb-6">شركاء النجاح</h3>
+          <div className="grid grid-cols-2 gap-4">
+             {['مدارس الرياض', 'أكاديمية طويق', 'مدارس المنهل', 'تعليم جازان'].map((n, i) => (
+                 <div key={i} className="h-16 bg-slate-900/50 rounded-xl border border-slate-700/50 flex items-center justify-center text-slate-500 font-bold text-sm">
+                    {n}
+                 </div>
+             ))}
+          </div>
+       </div>
+    </div>
+
+    {/* Benefits for Roles */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+        <div className="bg-slate-900 border border-slate-800 p-8 rounded-2xl">
+            <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-500 mb-6"><Users size={24}/></div>
+            <h3 className="text-xl font-bold text-white mb-4">للمعلمين</h3>
+            <ul className="space-y-3 text-slate-400">
+                <li className="flex gap-2"><Check size={18} className="text-blue-500 mt-0.5"/> تحضير دروس تلقائي ومناهج جاهزة.</li>
+                <li className="flex gap-2"><Check size={18} className="text-blue-500 mt-0.5"/> متابعة تقدم الطلاب لحظة بلحظة.</li>
+                <li className="flex gap-2"><Check size={18} className="text-blue-500 mt-0.5"/> أدوات كشف الغش والنسخ في الأكواد.</li>
+            </ul>
+        </div>
+        <div className="bg-slate-900 border border-slate-800 p-8 rounded-2xl">
+            <div className="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-500 mb-6"><Building size={24}/></div>
+            <h3 className="text-xl font-bold text-white mb-4">لإدارة المدرسة</h3>
+            <ul className="space-y-3 text-slate-400">
+                <li className="flex gap-2"><Check size={18} className="text-emerald-500 mt-0.5"/> توفير 70% من ميزانية معامل الروبوت.</li>
+                <li className="flex gap-2"><Check size={18} className="text-emerald-500 mt-0.5"/> تقارير دورية عن أداء المدرسة في STEM.</li>
+                <li className="flex gap-2"><Check size={18} className="text-emerald-500 mt-0.5"/> دعم فني وتدريب للكادر التعليمي.</li>
+            </ul>
+        </div>
+    </div>
+
+    {/* Steps */}
+    <div className="max-w-4xl mx-auto mt-20">
+        <h3 className="text-2xl font-bold mb-12 text-center">رحلة الشراكة والاعتماد</h3>
+        <div className="space-y-8 relative">
+             <div className="absolute top-4 bottom-4 right-6 w-0.5 bg-slate-800"></div>
+             
+             {[
+               { title: 'جلسة استكشافية', desc: 'نجتمع مع إدارة المدرسة وفريق التقنية لتحديد الاحتياجات التعليمية والبنية التحتية الحالية.' },
+               { title: 'التخصيص والتكامل', desc: 'نربط المنصة بنظام إدارة التعلم (LMS) لديكم، ونختار المسارات التعليمية المناسبة للطلاب.' },
+               { title: 'تدريب المعلمين (TOT)', desc: 'ورش عمل مكثفة للمعلمين لتمكينهم من استخدام أدوات المنصة وإدارة الفصول الافتراضية.' },
+               { title: 'الإطلاق التجريبي', desc: 'تفعيل المنصة لصف دراسي واحد لقياس الأثر والتأكد من سلاسة التجربة.' },
+               { title: 'الاعتماد الكامل', desc: 'تعميم التجربة على كافة المراحل، مع دعم فني متواصل وتقارير أداء دورية.' }
+             ].map((step, i) => (
+                 <div key={i} className="flex gap-6 relative">
+                     <div className="w-12 h-12 shrink-0 bg-slate-900 border-2 border-emerald-500 rounded-full flex items-center justify-center font-bold text-emerald-400 z-10 shadow-lg shadow-emerald-900/20">
+                         {i + 1}
+                     </div>
+                     <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl flex-1 hover:border-emerald-500/30 transition-colors">
+                         <h4 className="text-lg font-bold text-white mb-2">{step.title}</h4>
+                         <p className="text-slate-400 text-sm">{step.desc}</p>
+                     </div>
+                 </div>
+             ))}
+        </div>
     </div>
   </div>
 );
@@ -616,12 +743,14 @@ const FAQContent = () => (
      <h2 className="text-3xl font-bold text-center mb-12">الأسئلة الشائعة</h2>
      <div className="space-y-4">
         {[
-          { q: "هل أحتاج لخبرة سابقة في البرمجة؟", a: "لا، منصة مُلَقِّن مصممة لتبدأ معك من الصفر باستخدام نظام البلوكات المرئي." },
-          { q: "هل يعمل المحاكي على الأجهزة اللوحية (iPad)؟", a: "نعم، المنصة تعمل بالكامل عبر المتصفح وتدعم الأجهزة اللوحية وأجهزة الكمبيوتر." },
-          { q: "كيف يمكنني الحصول على الشهادة؟", a: "عند إتمام المسارات التدريبية واجتياز التحديات النهائية بنجاح، يتم إصدار شهادة معتمدة رقمياً." },
-          { q: "هل يمكنني إضافة الروبوت الخاص بي؟", a: "في النسخة الحالية يمكنك البناء من القطع المتاحة، وقريباً سنفتح باب استيراد النماذج الخاصة." }
+          { q: "هل أحتاج لخبرة سابقة في البرمجة؟", a: "لا، منصة مُلَقِّن مصممة لتبدأ معك من الصفر. نوفر مسار 'المبتدئ' الذي يستخدم البرمجة المرئية (Blockly) لتعليم المنطق دون كتابة كود، ثم نتدرج معك لتعلم Python." },
+          { q: "ما هي المتطلبات التقنية لتشغيل المنصة؟", a: "مُلَقِّن منصة سحابية بالكامل. كل ما تحتاجه هو جهاز كمبيوتر (Windows, Mac, Linux) أو جهاز لوحي حديث، ومتصفح إنترنت (Chrome أو Edge) واتصال مستقر بالإنترنت." },
+          { q: "هل المنهج معتمد؟", a: "نعم، تم تصميم مناهجنا وفقاً للمعايير العالمية لتعليم علوم الحاسب (CSTA) ومعايير التعليم التقني السعودية، ويتم مراجعتها من قبل خبراء أكاديميين." },
+          { q: "هل يمكنني الحصول على الشهادة؟", a: "بالتأكيد. عند إتمام المسارات التدريبية واجتياز التحديات والمشاريع النهائية بنجاح، يتم إصدار شهادة إتمام موثقة برقم مرجعي يمكن إضافتها لسيرتك الذاتية." },
+          { q: "هل يمكن للمدارس الاشتراك؟", a: "نعم، لدينا بوابة خاصة للمدارس تتيح للمعلمين إدارة الفصول، متابعة الطلاب، والحصول على تقارير تفصيلية. يمكنكم طلب عرض تجريبي من صفحة 'للمدارس'." },
+          { q: "كيف يعمل المصحح الذكي (AI)؟", a: "يستخدم المُلَقِّن نماذج ذكاء اصطناعي متقدمة (Gemini) لتحليل الكود الخاص بك لحظياً. لا يعطيك الحل المباشر، بل يكتشف موضع الخطأ ويشرحه لك، كما يقترح تلميحات ذكية لتحسين كفاءة الكود." }
         ].map((item, i) => (
-          <div key={i} className="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
+          <div key={i} className="bg-slate-900 border border-slate-800 p-6 rounded-2xl hover:border-emerald-500/30 transition-colors">
              <h3 className="font-bold text-white mb-2 flex items-center gap-2"><HelpCircle size={16} className="text-emerald-500"/> {item.q}</h3>
              <p className="text-slate-400 text-sm leading-relaxed pr-6">{item.a}</p>
           </div>
@@ -666,22 +795,101 @@ const ContactContent = () => (
   </div>
 );
 
-const LegalContent = ({ type }: { type: PublicView }) => (
-  <div className="max-w-4xl mx-auto px-6 py-20 text-slate-300">
-     <h2 className="text-3xl font-bold text-white mb-8">{type === PublicView.PRIVACY ? 'سياسة الخصوصية' : 'الشروط والأحكام'}</h2>
-     <div className="space-y-6 text-sm leading-relaxed bg-slate-900 p-8 rounded-2xl border border-slate-800">
-        <p>
-           هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها التطبيق.
-        </p>
-        <p>
-           إذا كنت تحتاج إلى عدد أكبر من الفقرات يتيح لك مولد النص العربى زيادة عدد الفقرات كما تريد، النص لن يبدو مقسما ولا يحوي أخطاء لغوية، مولد النص العربى مفيد لمصممي المواقع على وجه الخصوص، حيث يحتاج العميل فى كثير من الأحيان أن يطلع على صورة حقيقية لتصميم الموقع.
-        </p>
-        <h3 className="font-bold text-white text-lg mt-4">1. جمع البيانات</h3>
-        <p>نقوم بجمع البيانات اللازمة فقط لتحسين تجربة المستخدم التعليمية.</p>
-        <h3 className="font-bold text-white text-lg mt-4">2. الاستخدام</h3>
-        <p>نستخدم البيانات لتقديم تقارير الأداء وتخصيص مسار التعلم.</p>
-     </div>
-  </div>
-);
+const LegalContent = ({ type }: { type: PublicView }) => {
+  const isPrivacy = type === PublicView.PRIVACY;
+  
+  return (
+    <div className="max-w-4xl mx-auto px-6 py-20 text-slate-300">
+       <div className="flex items-center gap-3 mb-8">
+           {isPrivacy ? <Lock className="text-emerald-500" size={32} /> : <Shield className="text-emerald-500" size={32} />}
+           <h2 className="text-3xl font-bold text-white">{isPrivacy ? 'سياسة الخصوصية' : 'الشروط والأحكام'}</h2>
+       </div>
+       
+       <div className="bg-slate-900 p-8 lg:p-12 rounded-2xl border border-slate-800 space-y-10 leading-relaxed font-light">
+          {isPrivacy ? (
+              <>
+                  <section>
+                      <h3 className="text-xl font-bold text-white mb-4 border-b border-slate-800 pb-2">1. مقدمة عامة</h3>
+                      <p>مرحباً بكم في منصة مُلَقِّن. نحن نلتزم بحماية خصوصيتك وضمان أمان بياناتك الشخصية. توضح وثيقة سياسة الخصوصية هذه أنواع المعلومات التي نجمعها، وكيفية استخدامها، وحقوقك فيما يتعلق بهذه البيانات، وذلك بما يتوافق مع أنظمة حماية البيانات المعمول بها.</p>
+                  </section>
+                  <section>
+                      <h3 className="text-xl font-bold text-white mb-4 border-b border-slate-800 pb-2">2. البيانات التي نقوم بجمعها</h3>
+                      <div className="space-y-4">
+                        <p><strong className="text-slate-200">أ. البيانات الشخصية:</strong> عند التسجيل، قد نطلب معلومات مثل الاسم الكامل، البريد الإلكتروني، رقم الهاتف، اسم المدرسة أو المؤسسة التعليمية.</p>
+                        <p><strong className="text-slate-200">ب. البيانات الأكاديمية:</strong> نقوم بتخزين تقدمك الدراسي، نتائج التحديات، الأكواد البرمجية التي تكتبها، وتقييمات الذكاء الاصطناعي.</p>
+                        <p><strong className="text-slate-200">ج. البيانات التقنية:</strong> نجمع معلومات تلقائية مثل عنوان IP، نوع المتصفح، نظام التشغيل، وسجلات الوصول لتحسين تجربة المستخدم وأمان المنصة.</p>
+                      </div>
+                  </section>
+                  <section>
+                      <h3 className="text-xl font-bold text-white mb-4 border-b border-slate-800 pb-2">3. أغراض استخدام البيانات</h3>
+                      <ul className="list-disc list-inside space-y-2 text-slate-400 marker:text-emerald-500">
+                          <li>تقديم الخدمات التعليمية وتشغيل المحاكاة بكفاءة.</li>
+                          <li>إصدار الشهادات والتقارير الأكاديمية للمعلمين وأولياء الأمور.</li>
+                          <li>تحسين وتدريب نماذج الذكاء الاصطناعي (يتم استخدام بيانات مجهولة الهوية لهذا الغرض).</li>
+                          <li>إرسال إشعارات حول التحديثات، الصيانة، أو المواد التعليمية الجديدة.</li>
+                          <li>منع الاحتيال وضمان أمن المستخدمين.</li>
+                      </ul>
+                  </section>
+                  <section>
+                      <h3 className="text-xl font-bold text-white mb-4 border-b border-slate-800 pb-2">4. مشاركة البيانات والإفصاح عنها</h3>
+                      <p>نحن لا نقوم ببيع أو تأجير بياناتك الشخصية لأي طرف ثالث. قد نشارك البيانات في الحالات التالية:</p>
+                      <ul className="list-disc list-inside mt-2 space-y-1 text-slate-400 marker:text-emerald-500">
+                          <li>مع مقدمي الخدمات التقنية (مثل خدمات الاستضافة السحابية) الذين يلتزمون بمعايير أمان صارمة.</li>
+                          <li>مع المؤسسة التعليمية (المدرسة) التي تتبع لها، لغرض متابعة الأداء.</li>
+                          <li>الامتثال للمتطلبات القانونية أو التنظيمية.</li>
+                      </ul>
+                  </section>
+                   <section>
+                      <h3 className="text-xl font-bold text-white mb-4 border-b border-slate-800 pb-2">5. أمن البيانات</h3>
+                      <p>نستخدم أحدث تقنيات التشفير (SSL/TLS) لحماية البيانات أثناء النقل، ونطبق إجراءات أمنية صارمة على خوادمنا لمنع الوصول غير المصرح به.</p>
+                  </section>
+                  <section>
+                      <h3 className="text-xl font-bold text-white mb-4 border-b border-slate-800 pb-2">6. حقوق المستخدم</h3>
+                      <p>لك الحق في طلب الوصول إلى بياناتك، تصحيحها، أو حذفها في أي وقت. يمكنك ممارسة هذه الحقوق عبر التواصل مع فريق الدعم الفني.</p>
+                  </section>
+              </>
+          ) : (
+              <>
+                  <section>
+                      <h3 className="text-xl font-bold text-white mb-4 border-b border-slate-800 pb-2">1. شروط الاستخدام</h3>
+                      <p>تحكم هذه الشروط استخدامك لمنصة مُلَقِّن. بإنشاء حساب أو استخدام الموقع، فإنك توافق قانونياً على الالتزام بهذه الشروط. المنصة مخصصة للاستخدام التعليمي للطلاب، المعلمين، والمؤسسات.</p>
+                  </section>
+                  <section>
+                      <h3 className="text-xl font-bold text-white mb-4 border-b border-slate-800 pb-2">2. الملكية الفكرية</h3>
+                      <p>جميع حقوق الملكية الفكرية المتعلقة بالمنصة، بما في ذلك البرمجيات، الأكواد المصدرية، التصاميم، المناهج الدراسية، والعلامات التجارية، هي ملك حصري لشركة "مُلَقِّن" لتقنية التعليم.</p>
+                      <p className="mt-2 text-slate-400">يُمنع نسخ، توزيع، أو هندسة عكسية لأي جزء من المنصة دون إذن كتابي مسبق.</p>
+                  </section>
+                  <section>
+                      <h3 className="text-xl font-bold text-white mb-4 border-b border-slate-800 pb-2">3. حسابات المستخدمين</h3>
+                      <p>أنت مسؤول عن الحفاظ على سرية معلومات حسابك وكلمة المرور. تتحمل المسؤولية الكاملة عن جميع الأنشطة التي تحدث تحت حسابك. يجب إخطارنا فوراً عن أي استخدام غير مصرح به.</p>
+                  </section>
+                  <section>
+                      <h3 className="text-xl font-bold text-white mb-4 border-b border-slate-800 pb-2">4. سلوك المستخدم</h3>
+                      <ul className="list-disc list-inside space-y-2 text-slate-400 marker:text-emerald-500">
+                          <li>يمنع استخدام المنصة لأي غرض غير قانوني أو ضار.</li>
+                          <li>يمنع محاولة تعطيل الخوادم أو الشبكات المرتبطة بالمنصة.</li>
+                          <li>يمنع استخدام أدوات الغش أو البرمجيات التلقائية (Bots) في حل التحديات.</li>
+                          <li>يجب احترام الآخرين في المنتديات وغرف الدردشة وعدم نشر محتوى مسيء.</li>
+                      </ul>
+                  </section>
+                  <section>
+                      <h3 className="text-xl font-bold text-white mb-4 border-b border-slate-800 pb-2">5. الاشتراكات والمدفوعات</h3>
+                      <p>الخدمات المدفوعة تخضع لرسوم اشتراك تجدد تلقائياً. يمكن إلغاء الاشتراك في أي وقت، وسيستمر الوصول حتى نهاية فترة الفوترة الحالية. لا توجد مبالغ مستردة للفترات الجزئية.</p>
+                  </section>
+                  <section>
+                      <h3 className="text-xl font-bold text-white mb-4 border-b border-slate-800 pb-2">6. إخلاء المسؤولية</h3>
+                      <p>يتم تقديم المنصة "كما هي". لا نضمن خلوها من الأخطاء أو انقطاع الخدمة، رغم سعينا الدائم لتحسين الجودة. لن نكون مسؤولين عن أي أضرار غير مباشرة ناتجة عن استخدام المنصة.</p>
+                  </section>
+              </>
+          )}
+          
+          <div className="pt-8 border-t border-slate-800 flex justify-between items-center text-sm text-slate-500">
+              <span>آخر تحديث: 01 يونيو 2025</span>
+              <span>رقم النسخة: 2.4.1</span>
+          </div>
+       </div>
+    </div>
+  );
+};
 
 export default LandingPage;
