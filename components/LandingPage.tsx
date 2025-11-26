@@ -1,5 +1,5 @@
 import React, { useState, Suspense, lazy } from 'react';
-import { Bot, Code, Layers, Zap, ArrowLeft, Brain, Box, Check, Users, Building, Mail, HelpCircle, FileText, Play, RotateCw, Navigation, Shield, Lock, Eye, TrendingUp, Award, Smartphone, Globe, BookOpen, Loader2 } from 'lucide-react';
+import { Bot, Code, Layers, Zap, ArrowLeft, Brain, Box, Check, Users, Building, Mail, HelpCircle, FileText, Play, RotateCw, Navigation, Shield, Lock, Eye, TrendingUp, Award, Smartphone, Globe, BookOpen, Loader2, Compass, Terminal, Star, Quote, Activity } from 'lucide-react';
 import { PublicView, RobotConfig } from '../types';
 
 // Lazy load simulation components to reduce initial bundle size (avoids loading Three.js immediately)
@@ -276,6 +276,108 @@ const HomeContent = ({ onStart, setPage }: { onStart: () => void, setPage: (v: P
            ))}
         </div>
       </div>
+    </div>
+
+    {/* Stats Section */}
+    <div className="py-16 border-b border-slate-800">
+      <div className="max-w-7xl mx-auto px-6 lg:px-16">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+          {[
+             { val: "+5,000", label: "طالب وطالبة" },
+             { val: "+120", label: "مدرسة مشاركة" },
+             { val: "+50k", label: "سطر برمجي" },
+             { val: "+15", label: "تحدي ذكي" }
+          ].map((stat, i) => (
+            <div key={i}>
+               <div className="text-4xl lg:text-5xl font-black text-white mb-2">{stat.val}</div>
+               <div className="text-slate-500 font-medium">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    {/* Tracks Preview */}
+    <div className="py-20">
+        <div className="max-w-7xl mx-auto px-6 lg:px-16">
+            <div className="text-center mb-12">
+                <h2 className="text-3xl lg:text-4xl font-bold mb-4">مسارات تعليمية</h2>
+                <p className="text-slate-400 max-w-2xl mx-auto">
+                    اختر المسار الذي يناسب مستواك الحالي وانطلق في رحلة احتراف برمجة الروبوتات، من الأساسيات وحتى الذكاء الاصطناعي.
+                </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {[
+                    { 
+                        title: 'المبتدئ (Junior)', 
+                        icon: BookOpen, 
+                        desc: 'ابدأ رحلتك بتعلم أساسيات المنطق البرمجي باستخدام السحب والإفلات (Blocks).', 
+                        level: 'سهل', 
+                        color: 'border-emerald-500',
+                        bg: 'bg-emerald-500/10'
+                    },
+                    { 
+                        title: 'المستكشف (Explorer)', 
+                        icon: Compass, 
+                        desc: 'تعمق في برمجة الحساسات، التحكم في المحركات، وبناء خوارزميات بسيطة.', 
+                        level: 'متوسط', 
+                        color: 'border-amber-500',
+                        bg: 'bg-amber-500/10'
+                    },
+                    { 
+                        title: 'المحترف (Pro)', 
+                        icon: Terminal, 
+                        desc: 'احترف لغة Python، الرؤية الحاسوبية (CV)، وتطبيقات الذكاء الاصطناعي المتقدمة.', 
+                        level: 'صعب', 
+                        color: 'border-rose-500',
+                        bg: 'bg-rose-500/10'
+                    }
+                ].map((track, i) => (
+                    <div key={i} className={`bg-slate-900 p-8 rounded-2xl border-t-4 ${track.color} shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300`}>
+                        <div className={`w-14 h-14 ${track.bg} rounded-2xl flex items-center justify-center mb-6`}>
+                            <track.icon size={28} className={track.color.replace('border', 'text')} />
+                        </div>
+                        <div className="flex justify-between items-start mb-4">
+                            <h3 className="text-xl font-bold text-white">{track.title}</h3>
+                            <span className="text-xs bg-slate-800 px-2 py-1 rounded text-slate-300 border border-slate-700">{track.level}</span>
+                        </div>
+                        <p className="text-slate-400 text-sm leading-relaxed mb-6">{track.desc}</p>
+                        <button className="text-sm font-bold text-white hover:text-emerald-400 flex items-center gap-1 transition-colors">
+                            اكتشف المزيد <ArrowLeft size={14} />
+                        </button>
+                    </div>
+                ))}
+            </div>
+        </div>
+    </div>
+
+    {/* Testimonials Section */}
+    <div className="py-20 bg-slate-900/30 border-y border-slate-800/50">
+       <div className="max-w-7xl mx-auto px-6 lg:px-16">
+          <div className="text-center mb-16">
+             <h2 className="text-3xl font-bold mb-4">ماذا يقول أبطال المستقبل؟</h2>
+             <p className="text-slate-400">تجارب طلاب ومعلمين غيرت نظرتهم لتعليم الروبوتات</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                 { text: "منصة مُلَقِّن جعلتني أفهم كيف تعمل السيارات ذاتية القيادة. المحاكي واقعي جداً!", name: "سعود القحطاني", role: "طالب - الصف الثاني ثانوي" },
+                 { text: "كُنت أعاني في شرح المفاهيم البرمجية للطلاب بدون أجهزة، الآن أصبح الأمر ممتعاً وتفاعلياً.", name: "أ. نورة الشهري", role: "معلمة حاسب آلي" },
+                 { text: "أفضل ما في المنصة هو المساعد الذكي، يصحح أخطائي ويشرحها لي وكأن معي مدرب خاص.", name: "يوسف أحمد", role: "طالب - الصف الثالث متوسط" }
+              ].map((t, i) => (
+                 <div key={i} className="bg-slate-900 border border-slate-800 p-8 rounded-2xl relative">
+                    <Quote className="text-slate-700 absolute top-6 left-6 opacity-50" size={40} />
+                    <div className="flex gap-1 text-yellow-500 mb-4">
+                       {[1,2,3,4,5].map(s => <Star key={s} size={14} fill="currentColor" />)}
+                    </div>
+                    <p className="text-slate-300 text-lg leading-relaxed mb-6 relative z-10">"{t.text}"</p>
+                    <div>
+                       <div className="font-bold text-white">{t.name}</div>
+                       <div className="text-xs text-emerald-500">{t.role}</div>
+                    </div>
+                 </div>
+              ))}
+          </div>
+       </div>
     </div>
   </>
 );
